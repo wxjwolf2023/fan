@@ -57,7 +57,8 @@ def get_fan_conf():
     local_content = local_conf(content)
     with open('a.json', 'w', newline='', encoding='utf-8') as f:
         f.write(local_content)
-
+    response1 = requests.get("https://purge.jsdelivr.net/gh/wxjwolf2023/fan@main/a.json")
+    
     # Update conf.md5
     config.set("md5", "conf", md5)
     with open("config.ini", "w") as f:
@@ -75,6 +76,7 @@ def get_fan_conf():
         response = requests.get(url)
         with open("./JAR/fan.txt", "wb") as f:
             f.write(response.content)
+        response1 = requests.get("https://purge.jsdelivr.net/gh/wxjwolf2023/fan@main/JAR/fan.txt")
 
 def diy_conf(content):
     content = content.replace('备用公众号【叨观荐影】', '豆瓣')
