@@ -1,13 +1,13 @@
 ### tvbox接口自用
 
 多线接口  
-https://v.muzid.eu.org/xl.json
+https://cdn.jsdelivr.net/gh/wxjwolf2023/fan@main/xl.json
 
 饭太硬接口  
-https://v.muzid.eu.org/xo.json
+https://cdn.jsdelivr.net/gh/wxjwolf2023/fan@main/xo.json
 
 自用接口  
-https://v.muzid.eu.org/a.json
+https://cdn.jsdelivr.net/gh/wxjwolf2023/fan@main/a.json
 
 ### 版本
 
