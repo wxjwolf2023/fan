@@ -95,7 +95,7 @@ def local_conf(content):
     new_live = {
         "name": "wxj",
         "type": 0,
-        "url": "https://cdn.jsdelivr.net/gh/wxjwolf2023/fan@main/a.json",
+        "url": "http://wxjwolf.3vhost.work/download.asp?id=10",
         "playerType": 2,
         "epg": "https://diyp.epg.qzz.io/?ch={name}&date={date}"
     }
