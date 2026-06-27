@@ -3,8 +3,8 @@ name: Delete Old Workflow Runs
 on:
   workflow_dispatch:  # 手动触发工作流
   schedule:
-     #定时触发，以下示例为每天的 UTC 时间凌晨 2:00 执行任务
-     - cron: '0 19 * * *'
+    # 定时触发，UTC时间凌晨2:00执行（北京时间上午10:00）
+    - cron: '0 2 * * *'
 
 jobs:
   delete-old-runs:
@@ -13,18 +13,59 @@ jobs:
     steps:
       - name: Delete old workflow runs
         env:
-          GITHUB_TOKEN: ${{ secrets.MYSTOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 使用默认token
         run: |
-          # 1. List the workflow runs (you can customize the limit)
-          runs=$(curl -H "Authorization: token $GITHUB_TOKEN" \
-            "https://api.github.com/repos/${{ github.repository }}/actions/runs?per_page=10")
-          #echo "$runs"  # 打印出完整的响应，检查返回的数据结构
-          # 2. Extract the run IDs from the response
-          run_ids=$(echo "$runs" | jq '.workflow_runs[] | .id')
-
-          # 3. Delete the workflow runs
-          for run_id in $run_ids; do
+          # 获取所有工作流运行记录，保留最近30条
+          echo "Fetching workflow runs..."
+          
+          # 获取运行列表，按创建时间排序，获取最近100条
+          runs=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/runs?per_page=100&page=1")
+          
+          # 检查API响应
+          if [ -z "$runs" ]; then
+            echo "No workflow runs found or API error"
+            exit 0
+          fi
+          
+          # 提取运行ID和创建时间，按创建时间排序
+          run_data=$(echo "$runs" | jq -r '.workflow_runs[] | "\(.id) \(.created_at)"' | sort -k2)
+          
+          # 计算需要删除的运行数量（保留最近30条）
+          total_runs=$(echo "$run_data" | wc -l)
+          keep_runs=7
+          
+          if [ $total_runs -le $keep_runs ]; then
+            echo "Only $total_runs runs found, no need to delete (keeping $keep_runs)"
+            exit 0
+          fi
+          
+          # 获取需要删除的运行ID（跳过最近30条）
+          delete_ids=$(echo "$run_data" | head -n -$keep_runs | awk '{print $1}')
+          
+          # 删除旧运行
+          deleted_count=0
+          for run_id in $delete_ids; do
             echo "Deleting workflow run ID: $run_id"
-            curl -X DELETE -H "Authorization: token $GITHUB_TOKEN" \
-              "https://api.github.com/repos/${{ github.repository }}/actions/runs/$run_id"
+            response=$(curl -s -X DELETE -H "Authorization: token $GITHUB_TOKEN" \
+              -w "%{http_code}" \
+              "https://api.github.com/repos/${{ github.repository }}/actions/runs/$run_id")
+            
+            if [ "$response" = "204" ]; then
+              echo "✓ Successfully deleted run $run_id"
+              ((deleted_count++))
+            else
+              echo "✗ Failed to delete run $run_id (HTTP $response)"
+            fi
+            
+            # 添加小延迟避免API限流
+            sleep 0.5
           done
+          
+          echo "Deleted $deleted_count old workflow runs"
+
+      - name: Summary
+        run: |
+          echo "## Cleanup Summary" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Old workflow runs have been cleaned up" >> $GITHUB_STEP_SUMMARY
+          echo "📅 Next scheduled run: Daily at 02:00 UTC" >> $GITHUB_STEP_SUMMARY
