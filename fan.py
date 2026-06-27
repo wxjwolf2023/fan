@@ -90,6 +90,17 @@ def local_conf(content):
     pattern = r'{"key":"\d+看球"(.|\n)*(?={"key":"Aid")'
     replacement = r'{"key":"百度","name":"百度┃采集","type":1,"api":"https://api.apibdzy.com/api.php/provide/vod?ac=list","searchable":1,"filterable":0},\n{"key":"量子","name":"量子┃采集","type":0,"api":"https://cj.lziapi.com/api.php/provide/vod/at/xml/","searchable":1,"changeable":1},\n{"key":"非凡","name":"非凡┃采集","type":0,"api":"http://cj.ffzyapi.com/api.php/provide/vod/at/xml/","searchable":1,"changeable":1},\n{"key":"暴風","name":"暴風┃采集","type":1,"api":"https://bfzyapi.com/api.php/provide/vod/?ac=list","searchable":1,"changeable":1},\n{"key":"索尼","name":"索尼┃采集","type":1,"api":"https://suoniapi.com/api.php/provide/vod","searchable":1,"changeable":1},\n'
     content = re.sub(pattern, replacement, content)
+    data = json.loads(content)
+    data['lives'] = []
+    new_live = {
+        "name": "wxj",
+        "type": 0,
+        "url": "https://cdn.jsdelivr.net/gh/wxjwolf2023/fan@main/a.json",
+        "playerType": 2,
+        "epg": "https://diyp.epg.qzz.io/?ch={name}&date={date}"
+    }
+    data['lives'].append(new_live)
+    content = json.dumps(data, indent=2)
     return content
 if __name__ == '__main__':
     get_fan_conf()
