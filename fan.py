@@ -92,14 +92,22 @@ def local_conf(content):
     content = re.sub(pattern, replacement, content)
     data = json.loads(content)
     data['lives'] = []
-    new_live = {
-        "name": "wxj",
+    live1 = {
+        "name": "3viptv",
         "type": 0,
         "url": "http://wxjwolf.3vhost.work/download.asp?id=10",
         "playerType": 2,
         "epg": "https://diyp.epg.qzz.io/?ch={name}&date={date}"
     }
-    data['lives'].append(new_live)
+    data['lives'].append(live1)
+    live2 = {
+        "name": "自用本地",
+        "type": 0,
+        "url": "http://192.168.2.5/iptv.m3u",
+        "playerType": 2,
+        "epg": "https://diyp.epg.qzz.io/?ch={name}&date={date}"
+    }
+    data['lives'].append(live2)
     content = json.dumps(data, indent=2)
     return content
 if __name__ == '__main__':
