@@ -1,16 +1,1 @@
-### tvbox接口自用
-
-多线接口  
-https://cdn.jsdelivr.net/gh/wxjwolf2023/fan@main/xl.json
-
-饭太硬接口  
-https://cdn.jsdelivr.net/gh/wxjwolf2023/fan@main/xo.json
-
-自用接口  
-https://cdn.jsdelivr.net/gh/wxjwolf2023/fan@main/a.json
-
-### 版本
-
-- [FongMi](https://github.com/FongMi/TV ) 
-
-- [影视仓](https://t.me/tvboxjk) 
+自用，勿扰！
