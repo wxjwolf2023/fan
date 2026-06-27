@@ -1,0 +1,30 @@
+name: Delete Old Workflow Runs
+
+on:
+  workflow_dispatch:  # 手动触发工作流
+  schedule:
+     #定时触发，以下示例为每天的 UTC 时间凌晨 2:00 执行任务
+     - cron: '0 19 * * *'
+
+jobs:
+  delete-old-runs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Delete old workflow runs
+        env:
+          GITHUB_TOKEN: ${{ secrets.MYSTOKEN }}
+        run: |
+          # 1. List the workflow runs (you can customize the limit)
+          runs=$(curl -H "Authorization: token $GITHUB_TOKEN" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/runs?per_page=10")
+          #echo "$runs"  # 打印出完整的响应，检查返回的数据结构
+          # 2. Extract the run IDs from the response
+          run_ids=$(echo "$runs" | jq '.workflow_runs[] | .id')
+
+          # 3. Delete the workflow runs
+          for run_id in $run_ids; do
+            echo "Deleting workflow run ID: $run_id"
+            curl -X DELETE -H "Authorization: token $GITHUB_TOKEN" \
+              "https://api.github.com/repos/${{ github.repository }}/actions/runs/$run_id"
+          done
