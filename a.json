@@ -58,6 +58,7 @@
 "logo":"https://bdcache1-f1.v3mh.com/image/25-12-16/6941612717007.gif",
 "hosts":["img1.wsyzy.org=fan.cloudflare.182682.xyz","fiizvfck.top=fan.cloudflare.182682.xyz","images.67c6c7a.com=fan.cloudflare.182682.xyz"],
 "lives":[
-{"name":"wxj","type":0,"url":"http://wxjwolf.3vhost.work/download.asp?id=10","playerType":2,"epg":"https://diyp.epg.qzz.io/?ch={name}&date={date}"}
+{"name":"wxj","type":0,"url":"http://wxjwolf.3vhost.work/download.asp?id=10","playerType":2,"epg":"https://diyp.epg.qzz.io/?ch={name}&date={date}"},
+{"name":"自用本地","type":0,"url":"http://192.168.2.5/iptv.m3u","playerType":2,"epg":"https://diyp.epg.qzz.io/?ch={name}&date={date}"}
 ]
 }
